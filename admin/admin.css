@@ -1,0 +1,267 @@
+@media screen {
+  *,
+  *:before,
+  *:after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  header {
+    background-color: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  header > h3 {
+    font-size: 24px;
+    text-align: center;
+    text-shadow: 8px 5px 6px rgba(0, 0, 0, 0.5);
+  }
+
+  body {
+    background-color: #080710;
+  }
+
+  .card {
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.13);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  }
+
+  .container {
+    width: 70%;
+    justify-content: center;
+
+    margin-top: 35px;
+    text-align: center;
+  }
+
+  @media (max-width: 968px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .main,
+    .info {
+      flex: 100%;
+    }
+  }
+  * {
+    font-family: "Poppins", sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+  }
+
+  table {
+    background-color: none;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  thead {
+    background-color: #923726;
+  }
+  tr {
+    border-bottom: 1px solid #efd9ce98;
+    height: 30px;
+  }
+  th {
+    border: 1px solid rgba(255, 101, 101, 0.1);
+  }
+
+  table,
+  td {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  button {
+    background-color: rgba(255, 255, 255, 0.13);
+    color: whitesmoke;
+    width: 30px;
+    border-radius: 15px;
+    margin-right: 10px;
+  }
+
+  button:hover {
+    background-color: #923726;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  h5 {
+    margin: 10px;
+  }
+
+  .search-bar input {
+    border-radius: 30px;
+    background-color: rgba(240, 248, 255, 0.755);
+    margin: 10px;
+    margin-bottom: 20px;
+    padding: 5px;
+    padding-left: 17px;
+    width: 50%;
+    color: #080710;
+    font-size: 13px;
+  }
+
+  .search-bar button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50px;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+  }
+
+  td > button {
+    width: 24px;
+    height: 24px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pm td > button {
+    width: 24px;
+    height: 24px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pm {
+    border: 4px dashed rgba(255, 255, 255, 0.1);
+    margin-top: 50px;
+    padding: 15px;
+  }
+
+  .pm table {
+    width: 70%;
+    margin: auto auto;
+  }
+
+  .pm thead {
+    background-color: rgba(255, 255, 255, 0.13);
+  }
+
+  .pmbtn {
+    margin-top: 15px;
+    width: 35%;
+    background-color: #ffffffcc;
+    color: #080710;
+    padding: 12px 0;
+    font-size: 13px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 400;
+  }
+
+  .crbtn {
+    margin-top: 15px;
+    width: 35%;
+    background-color: #ffffffcc;
+    color: #080710;
+    padding: 12px 0;
+    font-size: 13px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 400;
+  }
+
+  ol {
+    margin: 20px;
+    font-size: 14px;
+  }
+
+  .courseForm form * {
+    font-family: "Poppins", sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+  }
+
+  .courseForm label {
+    display: inline-flex;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .courseForm input {
+    display: inline-flex;
+    height: 50px;
+    width: 30%;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .editCourse form * {
+    font-family: "Poppins", sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+  }
+
+  .editCourse label {
+    display: inline-flex;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .editCourse input {
+    display: inline-flex;
+    height: 50px;
+    width: 10%;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .report {
+    color: whitesmoke;
+    margin: auto auto;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    height: 780px;
+  }
+
+  .options {
+    margin-bottom: 50px;
+  }
+
+  .results {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .results table {
+    width: 75%;
+    margin: auto auto;
+  }
+}
