@@ -41,6 +41,8 @@
     if (isset($_GET['error'])) {
       if ($_GET['error'] == 1) {
         $error = "User exists";
+      } else {
+        $error = $_GET['error'];
       }
     }
 
@@ -54,10 +56,10 @@
       <input type="text" placeholder="123-45-6789" name="numest" id="numEst" maxlength="11" required />
 
       <label for="nombre">Nombre</label>
-      <input type="text" placeholder="nombre completo" name="name" id="nombre" required />
+      <input type="text" placeholder="nombre completo" name="username" id="nombre" required />
 
       <label for="Aestudio">Año de Estudio</label>
-      <input type="number" placeholder="año actual de estudio" name="aestudio" id="Aestudio" required />
+      <input type="number" placeholder="año actual de estudio" name="study" id="Aestudio" required />
 
       <label for="password" id="passLabel">Contraseña</label>
       <input type="password" placeholder="contraseña" name="password" id="password" minlength="8" required />
@@ -79,6 +81,8 @@
         $error = "User not found";
       } else if ($_GET['error'] == 2) {
         $error = "Wrong password";
+      } else {
+        $error = $_GET['error'];
       }
     }
 

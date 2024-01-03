@@ -10,12 +10,16 @@ class DB
 
     public function start_connection()
     {
-        $conn = mysqli_connect($this->servername, $this->username, $this->password, $this->dbname);
+        $this->conn = mysqli_connect($this->servername, $this->username, $this->password, $this->dbname);
     }
 
     public function run_query($query)
     {
-        return mysqli_query($this->conn, $query);
+        try {
+            return mysqli_query($this->conn, $query);
+        } catch (Exception $e) {
+            return $this->conn->error;
+        }
     }
 
     public function prepare_query($query)

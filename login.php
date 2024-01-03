@@ -3,7 +3,7 @@ session_start();
 require("db.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $estnum = $_POST['estnum'];
+    $estnum = $_POST['numest'];
     $password = $_POST['password'];
 
     $db = new DB();
