@@ -1,9 +1,10 @@
 <?php
 session_start();
-require("db.php");
+include_once("db.php");
+include_once("user.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $estnum = $_POST['numest'];
+    $estnum = str_replace("-", "", $_POST['numest']);
     $password = $_POST['password'];
 
     $db = new DB();
@@ -14,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
-        $_SESSION['user'] = $row['username'];
-        $_SESSION['estid'] = $row['student_id'];
+        $user = new user($row['user_name'], $estnum);
+        $_SESSION['user'] = $user;
         if (password_verify($password, $row['password'])) {
             if ($row['year_of_study'] == 0) {
                 header("Location: admin/index.php");

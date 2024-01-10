@@ -1,7 +1,8 @@
 <?php
+include("../user.php");
 session_start();
 
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['user'])) {
     header("Location: ../index.php");
 }
 ?>
@@ -47,16 +48,44 @@ if (!isset($_SESSION['username'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td colspan="6">No data</td>
-                    </tr>
+                    <?php
+                    $courses = $_SESSION['user']->get_courses();
+
+                    if ($courses != NULL) {
+                        foreach ($courses as $course) {
+                            print '
+                            <tr>
+                                <td>#</td>
+                                <td>' . $course['course_id'] . '</td>
+                                <td>' . $course['section_id'] . '</td>
+                                <td>' . $course['credits'] . '</td>
+                                <td>' . $course['capacity'] . '</td>
+                                <td>
+                                    <form action="actions.php?type=add" method="POST">
+                                        <button>+</button>
+                                        <input type="hidden" value="' . $course['course_id'] . '" name="course">
+                                        <input type="hidden" value="' . $course['section_id'] . '" name="section">
+                                    </form>
+                                </td>
+                            </tr>
+                            ';
+                        }
+                    } else {
+                        print '
+                        <tr>
+                            <td colspan="6">No data</td>
+                        </tr>
+                        ';
+                    }
+                    ?>
+
                 </tbody>
             </table>
         </div>
 
         <div class="info">
             <div class="pm">
-                <h5><?php $_SESSION['username'] ?></h5>
+                <h5><?php print $_SESSION['user']->get_username() ?></h5>
                 <hr />
 
                 <h5>Pre-matricula</h5>
@@ -69,9 +98,28 @@ if (!isset($_SESSION['username'])) {
                         <th>Estado</th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td colspan="4">No data</td>
-                        </tr>
+                        <?php
+                        $courses = $_SESSION['user']->get_enrollCourses();
+
+                        if ($courses != NULL) {
+                            foreach ($courses as $course) {
+                                print '
+                                <tr>
+                                    <td>#</td>
+                                    <td>' . $course['course_id'] . ' - ' . $course['section_id'] . '</td>
+                                    <td>' . $course['credits'] . '</td>
+                                    <td>' . $course['status'] . '</td>
+                                </tr>
+                                ';
+                            }
+                        } else {
+                            print '
+                            <tr>
+                                <td colspan="6">No data</td>
+                            </tr>
+                            ';
+                        }
+                        ?>
                     </tbody>
                 </table>
                 <button class="pmbtn" onclick="showPopup()">Matricular Cursos</button>

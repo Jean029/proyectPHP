@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once("db.php");
+include_once("user.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
@@ -30,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $stm->execute();
 
-        $_SESSION['username'] = $username;
-        $_SESSION['estnum'] = $estnum;
+        $user = new user($username, $estnum);
+        $_SESSION['user'] = $user;
 
         header("Location: user/index.php");
     } else {
