@@ -28,7 +28,7 @@ class user extends DB
      */
     public function get_courses()
     {
-        $query = "SELECT * FROM courses c, section s WHERE c.course_id = s.course_id";
+        $query = "SELECT * FROM courses c, section s WHERE c.course_id = s.course_id and s.capacity > 0";
         $this->start_connection();
         $result = $this->run_query($query);
 
@@ -46,7 +46,7 @@ class user extends DB
 
     public function get_enrollCourses()
     {
-        $query = "SELECT * FROM enrollment WHERE student_id = " . $this->userId . "";
+        $query = "SELECT * FROM enrollment WHERE student_id = '" . $this->userId . "'";
         $this->start_connection();
         $result = $this->run_query($query);
 
@@ -59,6 +59,19 @@ class user extends DB
             return $courses;
         } else {
             return NULL;
+        }
+    }
+
+    public function get_enrollCourse($course)
+    {
+        $query = "SELECT * FROM enrollment WHERE student_id = '" . $this->userId . "' and course_id = '" . $course['course_id'] . "' and section_id = '" . $course['section_id'] . "'";
+        $this->start_connection();
+        $result = $this->run_query($query);
+
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -75,7 +88,7 @@ class user extends DB
      */
     public function enroll_course($course)
     {
-        $query = 'INSERT INTO enrollment(student_id, course_id, section_id, status) VALUES(' . $this->userId . ', ' . $course['course_id'] . ', ' . $course['section_id'] . ', 0)';
+        $query = 'INSERT INTO enrollment (student_id, course_id, section_id, credits, status) VALUES("' . $this->userId . '", "' . $course['course_id'] . '", "' . $course['section_id'] . '", "' . $course['credits'] . '", 0)';
         $this->start_connection();
         $this->run_query($query);
     }

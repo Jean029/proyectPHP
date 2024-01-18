@@ -61,7 +61,7 @@ if (!isset($_SESSION['user'])) {
                                 <td>' . $course['credits'] . '</td>
                                 <td>' . $course['capacity'] . '</td>
                                 <td>
-                                    <form action="actions.php?type=add" method="POST">
+                                    <form action="actions.php?add" method="POST">
                                         <button>+</button>
                                         <input type="hidden" value="' . $course['course_id'] . '" name="course">
                                         <input type="hidden" value="' . $course['section_id'] . '" name="section">
