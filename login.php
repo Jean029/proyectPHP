@@ -15,12 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
-        $user = new user($row['user_name'], $estnum);
-        $_SESSION['user'] = $user;
         if (password_verify($password, $row['password'])) {
             if ($row['year_of_study'] == 0) {
+                $user = new admin($row['user_name'], $estnum);
+                $_SESSION['user'] = $user;
                 header("Location: admin/index.php");
             } else {
+                $user = new student($row['user_name'], $estnum);
+                $_SESSION['user'] = $user;
                 header("Location: user/index.php");
             }
         } else {

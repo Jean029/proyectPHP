@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $stm->execute();
 
-        $user = new user($username, $estnum);
+        $user = new student($username, $estnum);
         $_SESSION['user'] = $user;
 
         header("Location: user/index.php");

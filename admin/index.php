@@ -1,3 +1,11 @@
+<?php
+include("../user.php");
+session_start();
+
+if (!isset($_SESSION['user'])) {
+    header("Location: ../index.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,8 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet" />
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
     <link href="../css/admin.css" rel="stylesheet" />
     <script src="../js/main.js"></script>
 
@@ -121,244 +128,297 @@
                 <button class="pmbtn">Guardar</button>
             </div>
         </div>
-        <div class="info">
-            <div class="pm">
-                <h5>Buscar estudiantes</h5>
-                <div class="search-bar">
-                    <form>
-                        <input type="text" placeholder="Buscar..." name="search" />
-                        <button type="submit">
-                            <i class="fa fa-search lupabtn"></i>
-                        </button>
-                    </form>
+        <div class="container2">
+            <div class="info">
+                <div class="pm">
+                    <h5>Buscar estudiantes</h5>
+                    <div class="search-bar">
+                        <form>
+                            <input type="text" placeholder="Buscar..." name="search" />
+                            <button type="submit">
+                                <i class="fa fa-search lupabtn"></i>
+                            </button>
+                        </form>
 
-                    <table>
-                        <thead>
-                            <th>Apellido, Nombre</th>
-                            <th># de estudiante</th>
-                            <th>Ver</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Pepito, Pelon</td>
-                                <td>840-19-8616</td>
-                                <td>
-                                    <button class="fa fa-eye" onclick="showPopupEst()"></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Pepito, Pelon</td>
-                                <td>840-19-8616</td>
-                                <td>
-                                    <button class="fa fa-eye" onclick="showPopupEst()"></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Pepito, Pelon</td>
-                                <td>840-19-8616</td>
-                                <td>
-                                    <button class="fa fa-eye" onclick="showList()"></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div id="List" style="display: none">
-                        <br />
-                        <h5>
-                            Cursos en la lista de <br />
-                            nombre apellido apellido
-                        </h5>
                         <table>
-                            <tr>
-                                <td>cccom3001 - 25</td>
-                                <td>3</td>
-                                <td>pendiente</td>
-                            </tr>
-                            <tr>
-                                <td>cccom3001 - 25</td>
-                                <td>3</td>
-                                <td>pendiente</td>
-                            </tr>
-                            <tr>
-                                <td>cccom3001 - 25</td>
-                                <td>3</td>
-                                <td>pendiente</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">total de creditos: 12</td>
-                            </tr>
+                            <thead>
+                                <th>Apellido, Nombre</th>
+                                <th># de estudiante</th>
+                                <th>Ver</th>
+                            </thead>
+                            <tbody>
+
+
+                                <?php
+                                $users = $_SESSION['user']->users;
+
+                                if ($users != null) {
+                                    foreach ($users as $user) {
+                                        print "
+                                        <tr>
+                                            <td>" . $user['user']['user_name'] . "</td>
+                                            <td>" . $user['user']['student_id'] . "</td>
+                                            <td><button class='fa fa-eye' onclick='showList()'></button></td>
+                                        </tr>
+                                        ";
+                                    }
+                                } else {
+                                    print "<tr colspan='3'>No data</tr>";
+                                }
+                                ?>
+                            </tbody>
                         </table>
-                        <button class="pmbtn" onclick="cancelList()">Cancelar</button>
 
-                        <button class="pmbtn">Editar</button>
+                        <?php
+                        if ($users != null) {
+                            foreach ($users as $user) {
+                                print '
+                                <div id="' . $user['user']['student_id'] . '" style="display: none">
+                                    <br />
+                                    <h5>
+                                        Cursos en la lista de <br />
+                                        ' . $user['user']['user_name'] . '
+                                    </h5>';
 
-                        <button class="pmbtn">Matricular</button>
+                                if ($user['course'] != null) {
+                                    $courses = $user['course'];
+                                    foreach ($courses as $course) {
+                                        print '
+                                            <tr>
+                                                <td>' . $course[''] . '</td>
+                                            </tr>
+                                        ';
+                                    }
+                                }
+
+                                '<table>
+                                        <tr>
+                                            <td>cccom3001 - 25</td>
+                                            <td>3</td>
+                                            <td>pendiente</td>
+                                        </tr>
+                                        <tr>
+                                            <td>cccom3001 - 25</td>
+                                            <td>3</td>
+                                            <td>pendiente</td>
+                                        </tr>
+                                        <tr>
+                                            <td>cccom3001 - 25</td>
+                                            <td>3</td>
+                                            <td>pendiente</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">total de creditos: 12</td>
+                                        </tr>
+                                    </table>';
+                                print '<button class="pmbtn" onclick="cancelList()">Cancelar</button>
+        
+                                    <button class="pmbtn">Editar</button>
+        
+                                    <button class="pmbtn">Matricular</button>
+                                </div>
+                                ';
+                            }
+                        }
+                        ?>
+
+                        <div id="List" style="display: none">
+                            <br />
+                            <h5>
+                                Cursos en la lista de <br />
+                                nombre apellido apellido
+                            </h5>
+                            <table>
+                                <tr>
+                                    <td>cccom3001 - 25</td>
+                                    <td>3</td>
+                                    <td>pendiente</td>
+                                </tr>
+                                <tr>
+                                    <td>cccom3001 - 25</td>
+                                    <td>3</td>
+                                    <td>pendiente</td>
+                                </tr>
+                                <tr>
+                                    <td>cccom3001 - 25</td>
+                                    <td>3</td>
+                                    <td>pendiente</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">total de creditos: 12</td>
+                                </tr>
+                            </table>
+                            <button class="pmbtn" onclick="cancelList()">Cancelar</button>
+
+                            <button class="pmbtn">Editar</button>
+
+                            <button class="pmbtn">Matricular</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="report card">
-            <h3>Reportes</h3>
-            <hr />
-            <div class="options">
-                <h5>Ver reportes por:</h5>
-                <button class="pmbtn" onclick="showTable('curso-seccion')">
-                    Reporte por Curso - Seccion
-                </button>
-                <button class="pmbtn" onclick="showTable('matriculados')">
-                    Reporte por Matriculados
-                </button>
-                <button class="pmbtn" onclick="showTable('prematriculados')">
-                    Reporte por Prematriculados
-                </button>
-                <button class="pmbtn" onclick="showTable('denegados')">
-                    Reporte por Denegados
-                </button>
-            </div>
-            <div class="results">
-                <div class="search-bar">
-                    <form>
-                        <input type="text" placeholder="Buscar..." name="search" />
-                        <button type="submit"><i class="fa fa-search"></i></button>
-                    </form>
+            <div class="report card">
+                <h3>Reportes</h3>
+                <hr />
+                <div class="options">
+                    <h5>Ver reportes por:</h5>
+                    <button class="pmbtn" onclick="showTable('curso-seccion')">
+                        Reporte por Curso - Seccion
+                    </button>
+                    <button class="pmbtn" onclick="showTable('matriculados')">
+                        Reporte por Matriculados
+                    </button>
+                    <button class="pmbtn" onclick="showTable('prematriculados')">
+                        Reporte por Prematriculados
+                    </button>
+                    <button class="pmbtn" onclick="showTable('denegados')">
+                        Reporte por Denegados
+                    </button>
                 </div>
-                <!-- tabla curso seccion-->
-                <table id="curso-seccion" style="display: none">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Curso - Seccion</th>
-                            <th scope="col">Matriculados</th>
-                            <th scope="col">Prematriculados</th>
-                            <th scope="col">Capacidad total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>CCOM3001 - M25</td>
-                            <td>10</td>
-                            <td>15</td>
-                            <td>25</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>CCOM3001 - M25</td>
-                            <td>10</td>
-                            <td>15</td>
-                            <td>25</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>CCOM3001 - M25</td>
-                            <td>10</td>
-                            <td>15</td>
-                            <td>25</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br />
-                <!-- tabla matriculados-->
+                <div class="results">
+                    <div class="search-bar">
+                        <form>
+                            <input type="text" placeholder="Buscar..." name="search" />
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+                    <!-- tabla curso seccion-->
+                    <table id="curso-seccion" style="display: none">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Curso - Seccion</th>
+                                <th scope="col">Matriculados</th>
+                                <th scope="col">Prematriculados</th>
+                                <th scope="col">Capacidad total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>CCOM3001 - M25</td>
+                                <td>10</td>
+                                <td>15</td>
+                                <td>25</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>CCOM3001 - M25</td>
+                                <td>10</td>
+                                <td>15</td>
+                                <td>25</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>CCOM3001 - M25</td>
+                                <td>10</td>
+                                <td>15</td>
+                                <td>25</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <!-- tabla matriculados-->
 
-                <table id="matriculados" style="display: none">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Nombre, Apellido</th>
-                            <th scope="col"># clases</th>
-                            <th scope="col"># creditos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>pepito, felin</td>
-                            <td>4</td>
-                            <td>12</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>pepito, felin</td>
-                            <td>4</td>
-                            <td>12</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>pepito, felin</td>
-                            <td>4</td>
-                            <td>12</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br />
-                <!-- tabla prematriculados-->
-                <table id="prematriculados" style="display: none">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Nombre, Apellido</th>
-                            <th scope="col"># clases</th>
-                            <th scope="col"># creditos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>pepito, felin</td>
-                            <td>4</td>
-                            <td>12</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>pepito, felin</td>
-                            <td>4</td>
-                            <td>12</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>pepito, felin</td>
-                            <td>4</td>
-                            <td>12</td>
-                        </tr>
-                    </tbody>
-                    <button class="pmbtn">Matricular a todos</button>
-                </table>
-                <br />
+                    <table id="matriculados" style="display: none">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre, Apellido</th>
+                                <th scope="col"># clases</th>
+                                <th scope="col"># creditos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>pepito, felin</td>
+                                <td>4</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>pepito, felin</td>
+                                <td>4</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>pepito, felin</td>
+                                <td>4</td>
+                                <td>12</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <!-- tabla prematriculados-->
+                    <table id="prematriculados" style="display: none">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre, Apellido</th>
+                                <th scope="col"># clases</th>
+                                <th scope="col"># creditos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>pepito, felin</td>
+                                <td>4</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>pepito, felin</td>
+                                <td>4</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>pepito, felin</td>
+                                <td>4</td>
+                                <td>12</td>
+                            </tr>
+                        </tbody>
+                        <button class="pmbtn">Matricular a todos</button>
+                    </table>
+                    <br />
 
-                <!-- tabla denegados-->
+                    <!-- tabla denegados-->
 
-                <table id="denegados" style="display: none">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Nombre, Apellido</th>
-                            <th scope="col">curso - seccion</th>
-                            <th scope="col">razon</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>pepito, felin</td>
-                            <td>ccom3001 - l10</td>
-                            <td>no confirmo matricula</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>pepito, felin</td>
-                            <td>ccom3001 - l10</td>
-                            <td>cancelacion de cupo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>pepito, felin</td>
-                            <td>ccom3001 - l10</td>
-                            <td>cancelacion de curso/seccion</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br />
+                    <table id="denegados" style="display: none">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre, Apellido</th>
+                                <th scope="col">curso - seccion</th>
+                                <th scope="col">razon</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>pepito, felin</td>
+                                <td>ccom3001 - l10</td>
+                                <td>no confirmo matricula</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>pepito, felin</td>
+                                <td>ccom3001 - l10</td>
+                                <td>cancelacion de cupo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>pepito, felin</td>
+                                <td>ccom3001 - l10</td>
+                                <td>cancelacion de curso/seccion</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                </div>
             </div>
         </div>
     </div>
