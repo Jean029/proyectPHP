@@ -26,6 +26,7 @@ if (!isset($_SESSION['user'])) {
 <body>
     <header>
         <h2>Administracion de cursos de UPRA</h2>
+        <button><a href="actions.php?logout">Logout</a></button>
     </header>
 
     <div class="container">
@@ -131,130 +132,8 @@ if (!isset($_SESSION['user'])) {
         <div class="container2">
             <div class="info">
                 <div class="pm">
-                    <h5>Buscar estudiantes</h5>
-                    <div class="search-bar">
-                        <form>
-                            <input type="text" placeholder="Buscar..." name="search" />
-                            <button type="submit">
-                                <i class="fa fa-search lupabtn"></i>
-                            </button>
-                        </form>
-
-                        <table>
-                            <thead>
-                                <th>Apellido, Nombre</th>
-                                <th># de estudiante</th>
-                                <th>Ver</th>
-                            </thead>
-                            <tbody>
-
-
-                                <?php
-                                $users = $_SESSION['user']->users;
-
-                                if ($users != null) {
-                                    foreach ($users as $user) {
-                                        print "
-                                        <tr>
-                                            <td>" . $user['user']['user_name'] . "</td>
-                                            <td>" . $user['user']['student_id'] . "</td>
-                                            <td><button class='fa fa-eye' onclick='showList()'></button></td>
-                                        </tr>
-                                        ";
-                                    }
-                                } else {
-                                    print "<tr colspan='3'>No data</tr>";
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-
-                        <?php
-                        if ($users != null) {
-                            foreach ($users as $user) {
-                                print '
-                                <div id="' . $user['user']['student_id'] . '" style="display: none">
-                                    <br />
-                                    <h5>
-                                        Cursos en la lista de <br />
-                                        ' . $user['user']['user_name'] . '
-                                    </h5>';
-
-                                if ($user['course'] != null) {
-                                    $courses = $user['course'];
-                                    foreach ($courses as $course) {
-                                        print '
-                                            <tr>
-                                                <td>' . $course[''] . '</td>
-                                            </tr>
-                                        ';
-                                    }
-                                }
-
-                                '<table>
-                                        <tr>
-                                            <td>cccom3001 - 25</td>
-                                            <td>3</td>
-                                            <td>pendiente</td>
-                                        </tr>
-                                        <tr>
-                                            <td>cccom3001 - 25</td>
-                                            <td>3</td>
-                                            <td>pendiente</td>
-                                        </tr>
-                                        <tr>
-                                            <td>cccom3001 - 25</td>
-                                            <td>3</td>
-                                            <td>pendiente</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="3">total de creditos: 12</td>
-                                        </tr>
-                                    </table>';
-                                print '<button class="pmbtn" onclick="cancelList()">Cancelar</button>
-        
-                                    <button class="pmbtn">Editar</button>
-        
-                                    <button class="pmbtn">Matricular</button>
-                                </div>
-                                ';
-                            }
-                        }
-                        ?>
-
-                        <div id="List" style="display: none">
-                            <br />
-                            <h5>
-                                Cursos en la lista de <br />
-                                nombre apellido apellido
-                            </h5>
-                            <table>
-                                <tr>
-                                    <td>cccom3001 - 25</td>
-                                    <td>3</td>
-                                    <td>pendiente</td>
-                                </tr>
-                                <tr>
-                                    <td>cccom3001 - 25</td>
-                                    <td>3</td>
-                                    <td>pendiente</td>
-                                </tr>
-                                <tr>
-                                    <td>cccom3001 - 25</td>
-                                    <td>3</td>
-                                    <td>pendiente</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">total de creditos: 12</td>
-                                </tr>
-                            </table>
-                            <button class="pmbtn" onclick="cancelList()">Cancelar</button>
-
-                            <button class="pmbtn">Editar</button>
-
-                            <button class="pmbtn">Matricular</button>
-                        </div>
-                    </div>
+                    <h5>Ver estudiantes activos</h5>
+                    <button><a href="estudiantes.php">Ver</a></button>
                 </div>
             </div>
             <div class="report card">

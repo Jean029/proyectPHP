@@ -60,13 +60,14 @@ function cancelCourse() {
   editCourse.style.display = "none";
 }
 
-function showList() {
-  var list = document.getElementById("List");
+function showList(id) {
+  console.log(id);
+  var list = document.getElementById(id);
   list.style.display = "block";
 }
 
-function cancelList() {
-  var list = document.getElementById("List");
+function cancelList(id) {
+  var list = document.getElementById(id);
   list.style.display = "none";
 }
 
