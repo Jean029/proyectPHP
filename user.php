@@ -112,11 +112,88 @@ class admin extends user
     {
         $this->start_connection();
 
-        $query = "INSERT INTO course (course_id, title, credits) VALUES('" . $course['course_id'] . "', '" . $course['title'] . "', " . $course['credits'] . ")";
-        $query2 = "INSERT INTO section (course_id, section_id, capacity, total_capacity) VALUES('" . $course['course_id'] . "', '" . $course['section_id'] . "', " . $course['capacity'] . ", " . $course['capacity'] . ")";
+        $query = "INSERT INTO courses (course_id, title, credits) VALUES('" . $course['id'] . "', '" . $course['title'] . "', " . $course['credits'] . ")";
 
         $this->run_query($query);
-        $this->run_query($query2);
+    }
+
+    public function add_section($section)
+    {
+        $this->start_connection();
+
+        $query = "INSERT INTO section (course_id, section_id, capacity, total_capacity) VALUES ('" . $section['course_id'] . "', '" . $section['section_id'] . "', " . $section['capacity'] . ", " . $section['capacity'] . ")";
+
+        $this->run_query($query);
+    }
+
+    public function get_coursesID()
+    {
+        $this->start_connection();
+
+        $query = "SELECT course_id FROM courses";
+
+        $result = $this->run_query($query);
+
+        if ($result->num_rows > 0) {
+            $courses = array();
+
+            while ($row = $result->fetch_assoc()) {
+                array_push($courses, $row['course_id']);
+            }
+
+            return $courses;
+        } else {
+            return null;
+        }
+    }
+
+    public function get_courses()
+    {
+        $query = "SELECT * FROM courses c";
+        $this->start_connection();
+        $result = $this->run_query($query);
+
+        if ($result->num_rows > 0) {
+            $courses = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($courses, $row);
+            }
+
+            return $courses;
+        } else {
+            return NULL;
+        }
+    }
+
+    public function get_course($id)
+    {
+        $this->start_connection();
+
+        $query = "SELECT * FROM courses WHERE course_id = '" . $id . "'";
+        $result = $this->run_query($query);
+
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        } else {
+            return null;
+        }
+    }
+
+    public function update_course($course)
+    {
+        $this->start_connection();
+
+        $query = "UPDATE courses SET title = '" . $course['title'] . "', credits = " . $course['credits'] . " WHERE course_id = '" . $course['id'] . "'";
+        $this->run_query($query);
+    }
+
+    public function delete_course($id)
+    {
+        $this->start_connection();
+
+        $query = "DELETE FROM courses WHERE course_id = '" . $id . "'";
+
+        $this->run_query($query);
     }
 
     private function set_users()
