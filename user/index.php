@@ -3,7 +3,16 @@ include("../user.php");
 session_start();
 
 if (!isset($_SESSION['user'])) {
-    header("Location: ../index.php");
+    header("Location: ../");
+}
+
+if ($_SESSION['type'] != 'user') {
+    header("Location: ../admin/");
+}
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: ../");
 }
 ?>
 <!DOCTYPE html>
@@ -25,13 +34,14 @@ if (!isset($_SESSION['user'])) {
 <body>
     <header>
         <h2>Bienvenido a la pagina de cursos de UPRA</h2>
+        <button><a href="index.php?logout">Logout</a></button>
     </header>
 
     <div class="container">
         <div class="main card">
             <div class="search-bar">
-                <form>
-                    <input type="text" placeholder="Buscar un curso y seccion..." name="search" />
+                <form action="actions.php?search" method="post">
+                    <input type="text" placeholder="Buscar un curso o seccion..." name="search" />
                     <button type="submit"><i class="fa fa-search lupabtn"></i></button>
                 </form>
             </div>
@@ -49,7 +59,11 @@ if (!isset($_SESSION['user'])) {
                 </thead>
                 <tbody>
                     <?php
-                    $courses = $_SESSION['user']->get_courses();
+                    if (isset($_SESSION['search'])) {
+                        $courses = $_SESSION['user']->search($_SESSION['search']);
+                    } else {
+                        $courses = $_SESSION['user']->get_courses();
+                    }
 
                     if ($courses != NULL) {
                         foreach ($courses as $course) {
@@ -60,6 +74,9 @@ if (!isset($_SESSION['user'])) {
                                 <td>' . $course['section_id'] . '</td>
                                 <td>' . $course['credits'] . '</td>
                                 <td>' . $course['capacity'] . '</td>
+                                ';
+                            if ($_SESSION['user']->check_enrollStatus() == 1) {
+                                print '
                                 <td>
                                     <form action="actions.php?add" method="POST">
                                         <button>+</button>
@@ -67,8 +84,10 @@ if (!isset($_SESSION['user'])) {
                                         <input type="hidden" value="' . $course['section_id'] . '" name="section">
                                     </form>
                                 </td>
-                            </tr>
-                            ';
+                                ';
+                            }
+
+                            print '</tr>';
                         }
                     } else {
                         print '
@@ -103,12 +122,22 @@ if (!isset($_SESSION['user'])) {
 
                         if ($courses != NULL) {
                             foreach ($courses as $course) {
+                                $status = "solicitado";
+
+                                if ($course['status'] == 1) {
+                                    $status = "pre-matriculado";
+                                } else if ($course['status'] == 2) {
+                                    $status = "matriculado";
+                                } else if ($course['status'] == 3) {
+                                    $status = "denegado";
+                                }
+
                                 print '
                                 <tr>
                                     <td>#</td>
                                     <td>' . $course['course_id'] . ' - ' . $course['section_id'] . '</td>
                                     <td>' . $course['credits'] . '</td>
-                                    <td>' . $course['status'] . '</td>
+                                    <td>' . $status . '</td>
                                 </tr>
                                 ';
                             }
@@ -122,7 +151,11 @@ if (!isset($_SESSION['user'])) {
                         ?>
                     </tbody>
                 </table>
-                <button class="pmbtn" onclick="showPopup()">Matricular Cursos</button>
+                <?php
+                if ($_SESSION['user']->check_enroll()) {
+                    print '<button class="pmbtn" onclick="showPopup()"><a href="actions.php?matricular">Pre-Matricular Cursos</a></button>';
+                }
+                ?>
             </div>
 
             <div class="popup-container" id="popup">

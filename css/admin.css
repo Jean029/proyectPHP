@@ -133,6 +133,12 @@
     margin: 10px;
   }
 
+  form > input {
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+  }
+
   .search-bar input {
     border-radius: 30px;
     background-color: rgba(240, 248, 255, 0.755);

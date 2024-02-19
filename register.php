@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = new student($username, $estnum);
         $_SESSION['user'] = $user;
 
-        header("Location: user/index.php");
+        header("Location: user/");
     } else {
         header("Location: index.php?register&error=1");
     }

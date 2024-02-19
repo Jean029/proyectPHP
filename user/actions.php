@@ -31,14 +31,27 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_GET['add'])) {
         $course = get_course($_POST['course'], $_POST['section']);
 
-        if (!$_SESSION['user']->get_enrollCourse($course)) {
+        if (!$_SESSION['user']->check_course($course['course_id']) and $_SESSION['user']->check_enrollStatus() == 1) {
             $_SESSION['user']->enroll_course($course);
             updateCapacity($course, $course['capacity'] - 1);
         }
         header("Location: index.php");
+    } else if (isset($_GET['search'])) {
+
+        if ($_POST['search'] == "" or $_POST['search'] == '') {
+            if (isset($_SESSION['search'])) {
+                unset($_SESSION['search']);
+            }
+        } else {
+            $_SESSION['search'] = $_POST['search'];
+        }
+        header("Location: ../user/");
     } else {
         header("Location: index.php");
     }
+} else if (isset($_GET['matricular'])) {
+    $_SESSION['user']->enroll();
+    header("Location: ../user");
 } else {
     header("Location: index.php");
 }

@@ -13,6 +13,8 @@ class user extends DB
      */
     protected $userId;
 
+    protected $search;
+
     /**
      * @param string $username
      * @param string $userId
@@ -51,6 +53,50 @@ class user extends DB
     {
         return $this->username;
     }
+
+    public function get_courseSection($course)
+    {
+        $this->start_connection();
+
+        $query = "SELECT * FROM courses c, section s WHERE s.course_id = '" . $course['course_id'] . "' and s.section_id = '" . $course['section_id'] . "'";
+        $result = $this->run_query($query);
+
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        } else {
+            return null;
+        }
+    }
+
+    public function search($string)
+    {
+        $this->start_connection();
+
+        $query = "SELECT * FROM (SELECT c.course_id, s.section_id, CONCAT_WS(' ', c.course_id, s.section_id) AS course FROM courses c, section s WHERE c.course_id = s.course_id) AS c WHERE course LIKE '%" . $string . "%'";
+
+        $result = $this->run_query($query);
+
+        if ($result->num_rows > 0) {
+            $courses = array();
+
+            while ($row = $result->fetch_assoc()) {
+                $course = $this->get_courseSection($row);
+
+                if ($course != null) {
+                    array_push($courses, $course);
+                }
+            }
+
+            return $courses;
+        } else {
+            return null;
+        }
+    }
+
+    public function get_search()
+    {
+        return $this->search;
+    }
 }
 
 class student extends user
@@ -73,10 +119,23 @@ class student extends user
         }
     }
 
-    public function get_enrollCourse($course)
+    public function check_enrollStatus()
     {
-        $query = "SELECT * FROM enrollment WHERE student_id = '" . $this->userId . "' and course_id = '" . $course['course_id'] . "' and section_id = '" . $course['section_id'] . "'";
         $this->start_connection();
+
+        $query = "SELECT enroll_status FROM student WHERE student_id = " . $this->userId . "";
+
+        $result = $this->run_query($query);
+
+        return $result->fetch_assoc();
+    }
+
+    public function check_enroll()
+    {
+        $this->start_connection();
+
+        $query = "SELECT * FROM enrollment WHERE status = 0 and student_id = " . $this->userId . "";
+
         $result = $this->run_query($query);
 
         if ($result->num_rows > 0) {
@@ -95,17 +154,39 @@ class student extends user
         $this->start_connection();
         $this->run_query($query);
     }
+
+    public function check_course($id)
+    {
+        $this->start_connection();
+
+        $query = "SELECT * FROM enrollment WHERE course_id = '" . $id . "' and student_id = " . $this->userId . "";
+
+        $result = $this->run_query($query);
+
+        if ($result->num_rows == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function enroll()
+    {
+        $this->start_connection();
+
+        $query = "UPDATE enrollment SET status = 1 WHERE status = 0";
+
+        $this->run_query($query);
+    }
 }
 
 class admin extends user
 {
-    public $users = array();
 
     public function __construct($username, $userId)
     {
         $this->username = $username;
         $this->userId = $userId;
-        $this->set_users();
     }
 
     public function add_course($course)
@@ -165,6 +246,62 @@ class admin extends user
         }
     }
 
+    public function get_courses_and_sections()
+    {
+        $query = "SELECT * FROM courses c, section s WHERE c.course_id = s.course_id ORDER BY c.course_id";
+        $this->start_connection();
+        $result = $this->run_query($query);
+
+        if ($result->num_rows > 0) {
+            $courses = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($courses, $row);
+            }
+
+            return $courses;
+        } else {
+            return NULL;
+        }
+    }
+
+    public function get_enroll($status)
+    {
+        $this->start_connection();
+
+        $query = "SELECT * FROM enrollment WHERE status = " . $status . "";
+
+        $result = $this->run_query($query);
+
+        if ($result->num_rows > 0) {
+            $courses = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($courses, $row);
+            }
+
+            return $courses;
+        } else {
+            return null;
+        }
+    }
+
+    public function enroll()
+    {
+        $this->start_connection();
+
+        $query = "UPDATE enrollment SET status = 2 WHERE status = 1";
+
+        $this->run_query($query);
+    }
+
+    public function close_enroll()
+    {
+        $this->start_connection();
+
+        $query = "UPDATE student SET enroll_status = 0 WHERE year_of_study > 0";
+
+        $this->run_query($query);
+    }
+
     public function get_course($id)
     {
         $this->start_connection();
@@ -174,6 +311,26 @@ class admin extends user
 
         if ($result->num_rows > 0) {
             return $result->fetch_assoc();
+        } else {
+            return null;
+        }
+    }
+
+    public function get_sections($course_id)
+    {
+        $this->start_connection();
+
+        $query = "SELECT * FROM section WHERE course_id = '" . $course_id . "'";
+
+        $result = $this->run_query($query);
+        if ($result->num_rows > 0) {
+            $sections = array();
+
+            while ($row = $result->fetch_assoc()) {
+                array_push($sections, $row);
+            }
+
+            return $sections;
         } else {
             return null;
         }
@@ -196,27 +353,72 @@ class admin extends user
         $this->run_query($query);
     }
 
-    private function set_users()
+    public function delete_user($id)
+    {
+        $this->start_connection();
+
+        $query = "DELETE FROM student WHERE student_id = " . $id . "";
+
+        $this->run_query($query);
+    }
+
+    public function get_users()
     {
         $query = "SELECT * FROM student WHERE year_of_study > 0";
         $this->start_connection();
         $result = $this->run_query($query);
 
         if ($result->num_rows > 0) {
+            $users = array();
             while ($row = $result->fetch_assoc()) {
                 $course = $this->get_userCourses($row['student_id']);
                 $data = array(
                     "user" => $row,
                     "course" => $course
                 );
-                array_push($this->users, $data);
+                array_push($users, $data);
             }
+            return $users;
         } else {
-            $this->users = null;
+            return null;
         }
     }
 
-    private function get_userCourses($userID)
+    public function get_user($id)
+    {
+        $this->start_connection();
+
+        $query = "SELECT * FROM student WHERE student_id = " . $id . "";
+
+        $result = $this->run_query($query);
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        } else {
+            return null;
+        }
+    }
+
+    public function update_user($user)
+    {
+        $this->start_connection();
+
+        $query = "UPDATE student SET user_name = '" . $user['username'] . "', year_of_study = '" . $user['year'] . "' WHERE student_id = " . $user['id'] . "";
+
+        $this->run_query($query);
+    }
+
+    public function add_user($user)
+    {
+        $password = password_hash("user", PASSWORD_DEFAULT);
+
+        $this->start_connection();
+
+        $query = "INSERT INTO student(student_id, user_name, password, year_of_study) VALUES ('" . $user['id'] . "', '" . $user['username'] . "', '" . $password . "', " . $user['year'] . ")";
+
+        $this->run_query($query);
+    }
+
+    public function get_userCourses($userID)
     {
         $query = "SELECT * FROM enrollment WHERE student_id = '" . $userID . "'";
         $this->start_connection();

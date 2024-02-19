@@ -19,11 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($row['year_of_study'] == 0) {
                 $user = new admin($row['user_name'], $estnum);
                 $_SESSION['user'] = $user;
-                header("Location: admin/index.php");
+                $_SESSION['type'] = 'admin';
+                header("Location: admin/");
             } else {
                 $user = new student($row['user_name'], $estnum);
                 $_SESSION['user'] = $user;
-                header("Location: user/index.php");
+                $_SESSION['type'] = 'user';
+                header("Location: user/");
             }
         } else {
             header("Location: index.php?error=2");

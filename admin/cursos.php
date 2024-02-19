@@ -53,6 +53,19 @@ header_remove();
                         ";
                     }
                 } else if (isset($_GET['add'])) {
+
+                    if (isset($_GET['section'])) {
+                        $section = array(
+                            "course_id" => $_POST['course_id'],
+                            "section_id" => $_POST['id'],
+                            "capacity" => $_POST['capacity']
+                        );
+
+                        $_SESSION['user']->add_section($section);
+                        header_remove();
+                        header("Location: cursos.php");
+                    }
+
                     $course = array(
                         "id" => $_POST['id'],
                         "title" => $_POST['title'],
@@ -89,6 +102,64 @@ header_remove();
                     $_SESSION['user']->delete_course($_POST['id']);
                     header_remove();
                     header('Location: cursos.php?edit');
+                } else if (isset($_GET['section'])) {
+                    $course_id = $_POST['id'];
+                    if (isset($_GET['create'])) {
+                        print "
+                            <form action='cursos.php?section&add' method='post'>
+                                <label>Section ID</label>
+                                <input type='text' maxlength=3 name='id'> <br>
+
+                                <label>Capacity</label>
+                                <input type='number' name='capacity'> <br>
+
+                                <input type='hidden' value='" . $course_id . "' name='course_id'>
+
+                                <button type='submit'>Crear</button>
+                                <button><a href='cursos.php'>Cancelar</a></button>
+                            </form>
+                        ";
+                    } else {
+                        $sections = $_SESSION['user']->get_sections($course_id);
+
+                        print "<h2>Secciones del curso " . $course_id . "</h2>";
+
+                        if ($sections != null) {
+                            print "
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td>Id</td>
+                                        <td>Capacity</td>
+                                        <td>Total Capatity</td>
+                                    </tr>
+                                </thead>
+                                <tbody>";
+
+                            foreach ($sections as $section) {
+                                print "
+                                <tr>
+                                    <td>" . $section['section_id'] . "</td>
+                                    <td>" . $section['capacity'] . "</td>
+                                    <td>" . $section['total_capacity'] . "</td>
+                                </tr>
+                            ";
+                            }
+
+                            print "</tbody></table>";
+                        } else {
+                            print "<h3>No hay secciones dispoibles</h3>";
+                        }
+
+                        print "
+                        <form action='cursos.php?section&create' method='post'>
+                            <input type='hidden' name='id' value='" . $course_id . "'>
+                            <button><a>Crear Seccion Nueva</a></button>
+                        </form>
+                        
+                        <button><a href='cursos.php'>Volver</a></button>
+                        ";
+                    }
                 } else {
                     header('Location: cursos.php');
                 }
@@ -121,6 +192,7 @@ header_remove();
                                         <td>Curso</td>
                                         <td>Nombre</td>
                                         <td>Creditos</td>
+                                        <td>Secciones</td>
                                         <td>Edit</td>
                                         <td>Delete</td>
                                     </tr>
@@ -133,6 +205,12 @@ header_remove();
                                         <td>" . $curso['course_id'] . "</td>
                                         <td>" . $curso['title'] . "</td>
                                         <td>" . $curso['credits'] . "</td>
+                                        <td>
+                                            <form action='cursos.php?section' method='post'>
+                                                <input type='hidden' value='" . $curso['course_id'] . "' name='id'>
+                                                <button><i class='fa-solid fa-eye'></i></button>
+                                            </form>
+                                        </td>
                                         <td>
                                             <form action='cursos.php?edit' method='post'>
                                                 <input type='hidden' value='" . $curso['course_id'] . "' name='id'>
@@ -158,6 +236,7 @@ header_remove();
                                         <td>Curso</td>
                                         <td>Nombre</td>
                                         <td>Creditos</td>
+                                        <td>Secciones</td>
                                     </tr>
                                 </thead>
                                 <tbody>";
@@ -168,6 +247,12 @@ header_remove();
                                         <td>" . $curso['course_id'] . "</td>
                                         <td>" . $curso['title'] . "</td>
                                         <td>" . $curso['credits'] . "</td>
+                                        <td>
+                                            <form action='cursos.php?section' method='post'>
+                                                <input type='hidden' value='" . $curso['course_id'] . "' name='id'>
+                                                <button><i class='fa-solid fa-eye'></i></button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 ";
                             }

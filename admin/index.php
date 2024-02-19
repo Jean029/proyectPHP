@@ -3,7 +3,16 @@ include("../user.php");
 session_start();
 
 if (!isset($_SESSION['user'])) {
-    header("Location: ../index.php");
+    header("Location: ../");
+}
+
+if ($_SESSION['type'] != 'admin') {
+    header("Location: ../user/");
+}
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: ../");
 }
 ?>
 <!DOCTYPE html>
@@ -26,7 +35,7 @@ if (!isset($_SESSION['user'])) {
 <body>
     <header>
         <h2>Administracion de cursos de UPRA</h2>
-        <button><a href="actions.php?logout">Logout</a></button>
+        <button><a href="index.php?logout">Logout</a></button>
     </header>
 
     <div class="container">
@@ -38,16 +47,17 @@ if (!isset($_SESSION['user'])) {
         </div>
         <div class="card">
             <h2>Estudiantes activos</h2>
-            <button><a>Ver Estudiantes</a></button>
-            <button><a>Editar Estudiantes</a></button>
-            <button><a>Crear Estudiante</a></button>
+            <button><a href="estudiantes.php">Ver Estudiantes</a></button>
+            <button><a href="estudiantes.php?edit">Editar Estudiantes</a></button>
+            <button><a href="estudiantes.php?create">Crear Estudiante</a></button>
+            <button><a href="estudiantes.php?matricular">Matricular todos los estudiantes</a></button>
         </div>
         <div class="card">
             <h2>Reportes</h2>
-            <button><a>Cursos</a></button>
-            <button><a>Matricula</a></button>
-            <button><a>Prematricula</a></button>
-            <button><a>Denegados</a></button>
+            <button><a href='reportes.php?cursos'>Cursos</a></button>
+            <button><a href="reportes.php?matricula">Matricula</a></button>
+            <button><a href="reportes.php?prematricula">Prematricula</a></button>
+            <button><a href="reportes.php?denegados">Denegados</a></button>
         </div>
     </div>
 </body>

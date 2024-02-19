@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+if (isset($_SESSION['type'])) {
+  if ($_SESSION['type'] == 'user') {
+    header("Location: user/");
+  } else if ($_SESSION['type'] == 'admin') {
+    header("Location: admin/");
+  } else {
+    session_destroy();
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
