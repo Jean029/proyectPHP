@@ -75,7 +75,7 @@ if (isset($_GET['logout'])) {
                                 <td>' . $course['credits'] . '</td>
                                 <td>' . $course['capacity'] . '</td>
                                 ';
-                            if ($_SESSION['user']->check_enrollStatus() == 1) {
+                            if ($_SESSION['user']->check_enrollStatus()['enroll_status'] == 1) {
                                 print '
                                 <td>
                                     <form action="actions.php?add" method="POST">
