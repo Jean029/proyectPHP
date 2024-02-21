@@ -134,7 +134,7 @@ class student extends user
     {
         $this->start_connection();
 
-        $query = "SELECT * FROM enrollment WHERE status = 0 and student_id = " . $this->userId . "";
+        $query = "SELECT * FROM enrollment WHERE enroll_status = 0 and student_id = " . $this->userId . "";
 
         $result = $this->run_query($query);
 
