@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $user = new student($username, $estnum);
         $_SESSION['user'] = $user;
+        $_SESSION['type'] = 'user';
 
         header("Location: user/");
     } else {
