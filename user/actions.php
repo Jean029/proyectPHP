@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_GET['add'])) {
         $course = get_course($_POST['course'], $_POST['section']);
 
-        if (!$_SESSION['user']->check_course($course['course_id']) and $_SESSION['user']->check_enrollStatus() == 1) {
+        if (!$_SESSION['user']->check_course($course['course_id']) and $_SESSION['user']->check_enrollStatus()['enroll_status'] == 1) {
             $_SESSION['user']->enroll_course($course);
             updateCapacity($course, $course['capacity'] - 1);
         }
